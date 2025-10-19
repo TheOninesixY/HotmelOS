@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 应用程序数据 ---
-    let appData = {
+    // --- 默认应用程序数据 ---
+    const defaultAppData = {
         startMenuItems: [
             { type: 'header', name: '最近添加' },
             { id: 'youtube', type: 'item', name: 'YouTube', action: 'createWindow', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', deleted: false },
@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     { id: 'qq', name: 'QQ', size: 'normal', action: 'alert', deleted: false },
                     { id: 'terminal', name: '终端', size: 'normal', action: 'createWindow', url: 'https://hackertyper.net/', deleted: false },
                     { id: 'vscode', name: 'Visual Studio Code', size: 'wide', action: 'createWindow', url: 'https://vscode.dev/', deleted: false },
-                    { id: 'appstore', name: 'App Store', size: 'normal', action: 'restoreApps', deleted: false }, // App Store
                 ]
             },
             {
@@ -32,9 +31,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     { id: 'steam', name: 'Steam', size: 'normal', action: 'createWindow', url: 'https://store.steampowered.com/', deleted: false },
                     { id: 'roblox', name: 'Roblox', size: 'normal', action: 'createWindow', url: 'https://www.roblox.com/', deleted: false },
                 ]
+            },
+            {
+                title: '工具',
+                tiles: [
+                    { id: 'calculator', name: '计算器', size: 'normal', action: 'createWindow', url: 'https://www.desmos.com/scientific', deleted: false },
+                    { id: 'notepad', name: '记事本', size: 'normal', action: 'createWindow', url: 'https://anotepad.com/', deleted: false },
+                    { id: 'calendar', name: '日历', size: 'normal', action: 'createWindow', url: 'https://calendar.google.com/', deleted: false },
+                    { id: 'addapp', name: '添加应用', size: 'normal', action: 'openWindow', url: 'add.html', deleted: false },
+                ]
             }
         ]
     };
+
+    // --- 从 localStorage 加载数据，如果不存在则使用默认数据 ---
+    let appData = JSON.parse(localStorage.getItem('hotmelOS_appData'));
+    if (!appData) {
+        appData = defaultAppData;
+        localStorage.setItem('hotmelOS_appData', JSON.stringify(appData));
+    }
+
 
     // --- DOM 元素 ---
     const startButton = document.getElementById('start-button');
@@ -49,17 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 渲染整个开始菜单
     function renderStartMenu() {
-        // 清空现有内容
         startMenuListContainer.innerHTML = '';
         tilesContainer.innerHTML = '';
 
-        // 渲染列表
         appData.startMenuItems.forEach(itemData => {
-            if (itemData.deleted) return; // 跳过已删除的应用
-
+            if (itemData.deleted) return;
             const itemElement = document.createElement('div');
             itemElement.className = 'start-menu-list-item';
-
             if (itemData.type === 'header') {
                 itemElement.textContent = itemData.name;
                 itemElement.style.fontWeight = 'bold';
@@ -75,35 +87,28 @@ document.addEventListener('DOMContentLoaded', () => {
             startMenuListContainer.appendChild(itemElement);
         });
 
-        // 渲染磁贴
         appData.tileSections.forEach(sectionData => {
             const sectionDiv = document.createElement('div');
             sectionDiv.className = 'tiles-section';
-
             const titleDiv = document.createElement('div');
             titleDiv.className = 'section-title';
             titleDiv.textContent = sectionData.title;
             sectionDiv.appendChild(titleDiv);
-
             const gridDiv = document.createElement('div');
             gridDiv.className = 'tiles-grid';
-
             sectionData.tiles.forEach(tileData => {
-                if (tileData.deleted) return; // 跳过已删除的应用
-
+                if (tileData.deleted) return;
                 const tileDiv = document.createElement('div');
                 tileDiv.className = `tile ${tileData.size || 'normal'}`;
                 const span = document.createElement('span');
                 span.textContent = tileData.name;
                 tileDiv.appendChild(span);
                 tileDiv.addEventListener('click', () => handleAction(tileData));
-                // 仅当应用不是 App Store 时才添加右键删除功能
-                if (tileData.id !== 'appstore') {
+                if (tileData.id !== 'addapp') { // 确保“添加应用”不能被删除
                     tileDiv.addEventListener('contextmenu', (e) => showContextMenu(e, tileData));
                 }
                 gridDiv.appendChild(tileDiv);
             });
-
             sectionDiv.appendChild(gridDiv);
             tilesContainer.appendChild(sectionDiv);
         });
@@ -115,9 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
         contextMenu.style.display = 'block';
         contextMenu.style.left = `${e.pageX}px`;
         contextMenu.style.top = `${e.pageY}px`;
-
         contextMenuDelete.onclick = () => {
             itemData.deleted = true;
+            localStorage.setItem('hotmelOS_appData', JSON.stringify(appData)); // 保存更改
             renderStartMenu();
             contextMenu.style.display = 'none';
         };
@@ -125,14 +130,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 处理点击事件
     function handleAction(itemData) {
-        if (itemData.action === 'createWindow') {
+        if (itemData.action === 'createWindow' || itemData.action === 'openWindow') {
             createWindow(itemData.name, itemData.url);
         } else if (itemData.action === 'alert') {
             alert(`“${itemData.name}”不是一个真正的应用程序。`);
-        } else if (itemData.action === 'restoreApps') {
-            appData.startMenuItems.forEach(item => item.deleted = false);
-            appData.tileSections.forEach(section => section.tiles.forEach(tile => tile.deleted = false));
-            renderStartMenu();
         }
         startMenu.style.display = 'none';
     }
@@ -145,12 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 点击其他地方隐藏菜单
     document.addEventListener('click', (e) => {
-        if (!startMenu.contains(e.target)) {
-            startMenu.style.display = 'none';
-        }
-        if (!contextMenu.contains(e.target)) {
-            contextMenu.style.display = 'none';
-        }
+        if (!startMenu.contains(e.target)) startMenu.style.display = 'none';
+        if (!contextMenu.contains(e.target)) contextMenu.style.display = 'none';
     });
 
     // 更新时间
@@ -161,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         timeElement.textContent = `${hours}:${minutes}`;
     }
 
-    // 创建窗口 (代码与之前版本相同，此处省略以保持简洁)
+    // 创建窗口 (与之前相同)
     function createWindow(title, url) {
         const desktop = document.getElementById('desktop');
         const windowDiv = document.createElement('div');
@@ -234,4 +231,10 @@ document.addEventListener('DOMContentLoaded', () => {
     renderStartMenu();
     setInterval(updateTime, 1000);
     updateTime();
+
+    // 监听 localStorage 变化，实现页面间通信
+    window.addEventListener('storage', () => {
+        appData = JSON.parse(localStorage.getItem('hotmelOS_appData')) || defaultAppData;
+        renderStartMenu();
+    });
 });
