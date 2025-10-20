@@ -21,13 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     { id: 'wechat', name: '微信', size: 'normal', action: 'createWindow', url: 'https://weixin.qq.com/', deleted: false },
                     { id: 'qq', name: 'QQ', size: 'normal', action: 'alert', deleted: false },
                     { id: 'terminal', name: '终端', size: 'normal', action: 'createWindow', url: 'https://hackertyper.net/', deleted: false },
-                    { id: 'vscode', name: 'Visual Studio Code', size: 'wide', action: 'createWindow', url: 'https://vscode.dev/', deleted: false },
+                    { id: 'vscode', name: 'Hotmel Code', size: 'wide', action: 'createWindow', url: 'Hotmel Code.html', deleted: false },
+                    { id: 'addapp', name: 'App Store', size: 'normal', action: 'createWindow', url: 'App Store/index.html', deleted: false },
                 ]
             },
             {
                 title: '游戏',
                 tiles: [
-                    { id: 'minecraft', name: 'Minecraft', size: 'wide', action: 'createWindow', url: 'https://play.mc.js.cool/1.8wasm/', deleted: false },
+                    { id: 'minecraft', name: 'Minecraft', size: 'normal', action: 'createWindow', url: 'https://play.mc.js.cool/1.8wasm/', deleted: false },
                     { id: 'steam', name: 'Steam', size: 'normal', action: 'createWindow', url: 'https://store.steampowered.com/', deleted: false },
                     { id: 'roblox', name: 'Roblox', size: 'normal', action: 'createWindow', url: 'https://www.roblox.com/', deleted: false },
                 ]
@@ -38,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     { id: 'calculator', name: '计算器', size: 'normal', action: 'createWindow', url: 'https://www.desmos.com/scientific', deleted: false },
                     { id: 'notepad', name: '记事本', size: 'normal', action: 'createWindow', url: 'https://anotepad.com/', deleted: false },
                     { id: 'calendar', name: '日历', size: 'normal', action: 'createWindow', url: 'https://calendar.google.com/', deleted: false },
-                    { id: 'addapp', name: '添加应用', size: 'normal', action: 'openWindow', url: 'add.html', deleted: false },
                 ]
             }
         ]
