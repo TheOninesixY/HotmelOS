@@ -151,6 +151,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!startMenu.contains(e.target)) startMenu.style.display = 'none';
         if (!contextMenu.contains(e.target)) contextMenu.style.display = 'none';
     });
+    // 按下 Ctrl 键切换开始菜单
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Control') {
+            startMenu.style.display = startMenu.style.display === 'flex' ? 'none' : 'flex';
+        }
+    });
 
     // 更新时间
     function updateTime() {
