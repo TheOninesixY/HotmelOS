@@ -231,13 +231,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 关机功能 ---
     shutdownButton.addEventListener('click', () => {
-        // 退出由我们的代码启动的全屏模式
-        if (document.fullscreenElement && document.exitFullscreen) {
-            document.exitFullscreen();
-        }
-
-        // 显示黑屏
-        shutdownScreen.style.display = 'block';
+        // 向父窗口发送消息以关闭桌面
+        window.parent.postMessage('shutdown', '*');
     });
 
     // --- 初始化 ---

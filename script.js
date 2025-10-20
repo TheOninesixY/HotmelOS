@@ -45,4 +45,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setInterval(updateTime, 1000);
     updateTime();
+
+    // 监听来自 iframe 的消息
+    window.addEventListener('message', (event) => {
+        if (event.data === 'shutdown') {
+            const lockscreen = document.getElementById('lockscreen');
+            const desktopContainer = document.getElementById('desktop-container');
+
+            // 隐藏桌面并清空内容
+            desktopContainer.style.display = 'none';
+            desktopContainer.innerHTML = '';
+
+            // 显示锁屏
+            lockscreen.style.display = 'flex';
+
+            // 退出全屏
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { /* Safari */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE11 */
+                document.msExitFullscreen();
+            }
+        }
+    });
 });
