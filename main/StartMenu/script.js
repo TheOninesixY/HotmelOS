@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- 默认应用程序数据 ---
     const defaultAppData = {
-        startMenuItems: [], // 添加空数组以避免错误
+        startMenuItems: [],
         tileSections: [
             {
                 title: '应用',
@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     { id: 'qq', name: 'QQ', size: 'normal', action: 'alert', deleted: false },
                     { id: 'terminal', name: '终端', size: 'normal', action: 'createWindow', url: 'https://hackertyper.net/', deleted: false },
                     { id: 'pp', type: 'item',name: 'Photopea', action: 'createWindow', url: 'https://www.photopea.com/'},
-                    { id: 'addapp', name: 'App Store', size: 'normal', action: 'createWindow', url: '../App Store/index.html', deleted: false },
+                    { id: 'addapp', name: 'App Store', size: 'normal', action: 'createWindow', url: './Apps/App Store/index.html', deleted: false },
                 ]
             },
             {
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             {
                 title: '工具',
                 tiles: [
-                    { id: 'calculator', name: '计算器', size: 'normal', action: 'createWindow', url: 'https://www.desmos.com/scientific', deleted: false },
+                    { id: 'calculator', name: '计算器', size: 'normal', action: 'createWindow', url: './Apps/Calculator/index.html', deleted: false },
                     { id: 'notepad', name: '记事本', size: 'normal', action: 'createWindow', url: 'https://anotepad.com/', deleted: false },
                     { id: 'calendar', name: '日历', size: 'normal', action: 'createWindow', url: 'https://calendar.google.com/', deleted: false },
                 ]
