@@ -117,10 +117,16 @@ body {
     max-width: 200px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
     position: relative;
     border: 1px solid #ddd;
     border-bottom: none;
+}
+
+.tab-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .tab.active {
@@ -133,12 +139,24 @@ body {
 }
 
 .tab-close {
-    font-size: 12px;
     opacity: 0.7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.tab-close .material-symbols-outlined {
+    font-size: 14px;
+    vertical-align: middle;
 }
 
 .tab-close:hover {
     opacity: 1;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
 }
 
 .new-tab-btn {

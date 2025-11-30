@@ -43,7 +43,7 @@ class Browser {
         tabElement.dataset.tabId = tabId;
         tabElement.innerHTML = `
             <span class="tab-title">加载中...</span>
-            <span class="tab-close">×</span>
+            <span class="tab-close"><span class="material-symbols-outlined">close</span></span>
         `;
         
         // 添加到标签栏
