@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotmel Browser</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="browser-container">
+        <!-- 标签栏 -->
+        <div class="tab-bar">
+            <div class="new-tab-btn" id="newTabBtn">+</div>
+        </div>
+        
+        <!-- 浏览器头部 -->
+        <div class="browser-header">
+            <div class="nav-buttons">
+                <button class="nav-btn" id="backBtn" title="后退">←</button>
+                <button class="nav-btn" id="forwardBtn" title="前进">→</button>
+                <button class="nav-btn" id="refreshBtn" title="刷新">⟳</button>
+                <button class="nav-btn" id="homeBtn" title="主页">🏠</button>
+            </div>
+            <div class="address-bar">
+                <input type="text" class="url-input" id="urlInput" placeholder="输入网址..." />
+                <button class="go-btn" id="goBtn">前往</button>
+            </div>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="content-area" id="contentArea">
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

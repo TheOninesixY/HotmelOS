@@ -6,11 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
             {
                 title: '应用',
                 tiles: [
-                    { id: 'wechat', name: '微信', size: 'normal', action: 'createWindow', url: 'https://weixin.qq.com/', deleted: false },
+                    { id: 'wechat', name: '微信', size: 'normal', action: 'createWindow', url: 'https://web.weixin.qq.com/', deleted: false },
                     { id: 'qq', name: 'QQ', size: 'normal', action: 'alert', deleted: false },
                     { id: 'terminal', name: '终端', size: 'normal', action: 'createWindow', url: 'https://hackertyper.net/', deleted: false },
                     { id: 'pp', type: 'item',name: 'Photopea', action: 'createWindow', url: 'https://www.photopea.com/'},
                     { id: 'addapp', name: 'App Store', size: 'normal', action: 'createWindow', url: './Apps/App Store/index.html', deleted: false },
+                    { id: 'browser', name: '浏览器', size: 'normal', action: 'createWindow', url: 'https://oninesixy.pages.dev/Tools/QingTab', deleted: false },
                 ]
             },
             {
