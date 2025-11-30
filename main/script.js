@@ -60,8 +60,21 @@ document.addEventListener('DOMContentLoaded', () => {
             closeStartMenu();
         } else if (event.data.type === 'shutdown') {
             shutdown();
+        } else if (event.data.type === 'setWallpaper') {
+            // 设置桌面壁纸
+            document.body.style.backgroundImage = `url('${event.data.url}')`;
+            // 保存到localStorage
+            localStorage.setItem('hotmelos_wallpaper', event.data.url);
         }
     });
+    
+    // 初始化壁纸
+    function initWallpaper() {
+        const savedWallpaper = localStorage.getItem('hotmelos_wallpaper');
+        if (savedWallpaper) {
+            document.body.style.backgroundImage = `url('${savedWallpaper}')`;
+        }
+    }
 
     // 关机功能
     function shutdown() {
@@ -153,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 初始化 ---
     setInterval(updateTime, 1000);
     updateTime();
+    initWallpaper();
 
     // 确保iframe内容完全加载
     startMenuIframe.onload = function() {
