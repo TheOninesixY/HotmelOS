@@ -1,17 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- 默认应用程序数据 ---
     const defaultAppData = {
-        startMenuItems: [
-            { type: 'header', name: '最近添加' },
-            { id: 'youtube', type: 'item', name: 'YouTube', action: 'createWindow', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', deleted: false },
-            { id: 'bilibili', type: 'item', name: '哔哩哔哩', action: 'createWindow', url: 'https://www.bilibili.com/', deleted: false },
-            { type: 'separator' },
-            { id: '123pan', type: 'item', name: '123 网盘', action: 'createWindow', url: 'https://www.123pan.com/', deleted: false },
-            { type: 'header', name: 'B' },
-            { id: 'baidu', type: 'item', name: '百度网盘', action: 'createWindow', url: 'https://pan.baidu.com/', deleted: false },
-            { type: 'header', name: 'P' },
-            { id: 'pp', type: 'item',name: 'Photopea', action: 'createWindow', url: 'https://www.photopea.com/'}
-        ],
+        startMenuItems: [], // 添加空数组以避免错误
         tileSections: [
             {
                 title: '应用',
@@ -19,8 +9,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     { id: 'wechat', name: '微信', size: 'normal', action: 'createWindow', url: 'https://weixin.qq.com/', deleted: false },
                     { id: 'qq', name: 'QQ', size: 'normal', action: 'alert', deleted: false },
                     { id: 'terminal', name: '终端', size: 'normal', action: 'createWindow', url: 'https://hackertyper.net/', deleted: false },
-                    { id: 'hotmelcode', name: 'Hotmel Code', size: 'wide', action: 'createWindow', url: '../Hotmel Code.html', deleted: false },
+                    { id: 'pp', type: 'item',name: 'Photopea', action: 'createWindow', url: 'https://www.photopea.com/'},
                     { id: 'addapp', name: 'App Store', size: 'normal', action: 'createWindow', url: '../App Store/index.html', deleted: false },
+                ]
+            },
+            {
+                title: '影音',
+                tiles: [
+                    { id: 'youtube', type: 'item', name: 'YouTube', action: 'createWindow', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', deleted: false },
+                    { id: 'bilibili', type: 'item', name: '哔哩哔哩', action: 'createWindow', url: 'https://www.bilibili.com/', deleted: false },
                 ]
             },
             {
