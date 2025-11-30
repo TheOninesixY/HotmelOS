@@ -49,103 +49,7 @@ body, html {
     font-size: 12px;
 }
 
-#start-menu {
-    position: absolute;
-    bottom: 40px;
-    left: 0;
-    width: 600px; /* Increased width */
-    height: 500px;
-    background-color: rgba(30, 30, 30, 0.9);
-    display: none; /* Hidden by default */
-    color: white;
-    display: flex;
-}
-
-.start-menu-left {
-    position: relative; /* Add this to make the overlay position relative to this element */
-    width: 250px;
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 10px;
-    overflow-y: auto;
-}
-
-#start-menu-left-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 50px;
-    background-color: rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 10px;
-    box-sizing: border-box;
-}
-
-#shutdown-button {
-    background-color: #c0392b;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-}
-
-#shutdown-button:hover {
-    background-color: #e74c3c;
-}
-
-.start-menu-list-item {
-    padding: 8px;
-    cursor: pointer;
-}
-
-.start-menu-list-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.start-menu-list-item span {
-    padding-left: 10px;
-}
-
-.start-menu-right {
-    flex-grow: 1;
-    padding: 10px;
-    overflow-y: auto;
-}
-
-.tiles-section {
-    margin-bottom: 20px;
-}
-
-.section-title {
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.tiles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 5px;
-}
-
-.tile {
-    background-color: #0078D7;
-    height: 80px;
-    display: flex;
-    align-items: flex-end;
-    padding: 5px;
-    cursor: pointer;
-}
-
-.tile.wide {
-    grid-column: span 2;
-}
-
-.tile:hover {
-    background-color: #00539C;
-}
+/* 开始菜单样式已移至StartMenu目录下的style.css文件 */
 /* Window Styles */
 .window {
     position: absolute;
@@ -197,26 +101,7 @@ body, html {
     border: none;
 }
 
-/* Context Menu Styles */
-.context-menu {
-    position: absolute;
-    z-index: 1000;
-    width: 150px;
-    background-color: #2b2b2b;
-    border: 1px solid #555;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    display: none; /* Initially hidden */
-}
-
-.context-menu-item {
-    padding: 8px 12px;
-    color: white;
-    cursor: pointer;
-}
-
-.context-menu-item:hover {
-    background-color: #0078D7;
-}
+/* 上下文菜单样式已移至StartMenu目录下的style.css文件 */
 
 #shutdown-screen {
     position: fixed;

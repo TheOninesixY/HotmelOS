@@ -1,162 +1,77 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- 默认应用程序数据 ---
-    const defaultAppData = {
-        startMenuItems: [
-            { type: 'header', name: '最近添加' },
-            { id: 'youtube', type: 'item', name: 'YouTube', action: 'createWindow', url: 'https://www.youtube.com/embed/dQw4w9WgXcQ', deleted: false },
-            { id: 'bilibili', type: 'item', name: '哔哩哔哩', action: 'createWindow', url: 'https://www.bilibili.com/', deleted: false },
-            { type: 'separator' },
-            { id: '123pan', type: 'item', name: '123 网盘', action: 'createWindow', url: 'https://www.123pan.com/', deleted: false },
-            { type: 'header', name: 'A' },
-            { id: 'ps', type: 'item', name: 'Adobe Photoshop 2025', action: 'alert', deleted: false },
-            { id: 'ai', type: 'item', name: 'Adobe Illustrator 2025', action: 'alert', deleted: false },
-            { id: 'cc', type: 'item', name: 'Adobe Creative Cloud', action: 'alert', deleted: false },
-            { type: 'header', name: 'B' },
-            { id: 'baidu', type: 'item', name: '百度网盘', action: 'createWindow', url: 'https://pan.baidu.com/', deleted: false },
-        ],
-        tileSections: [
-            {
-                title: '常用',
-                tiles: [
-                    { id: 'wechat', name: '微信', size: 'normal', action: 'createWindow', url: 'https://weixin.qq.com/', deleted: false },
-                    { id: 'qq', name: 'QQ', size: 'normal', action: 'alert', deleted: false },
-                    { id: 'terminal', name: '终端', size: 'normal', action: 'createWindow', url: 'https://hackertyper.net/', deleted: false },
-                    { id: 'vscode', name: 'Hotmel Code', size: 'wide', action: 'createWindow', url: 'Hotmel Code.html', deleted: false },
-                    { id: 'addapp', name: 'App Store', size: 'normal', action: 'createWindow', url: 'App Store/index.html', deleted: false },
-                ]
-            },
-            {
-                title: '游戏',
-                tiles: [
-                    { id: 'minecraft', name: 'Minecraft', size: 'normal', action: 'createWindow', url: 'https://play.mc.js.cool/1.8wasm/', deleted: false },
-                    { id: 'steam', name: 'Steam', size: 'normal', action: 'createWindow', url: 'https://store.steampowered.com/', deleted: false },
-                    { id: 'roblox', name: 'Roblox', size: 'normal', action: 'createWindow', url: 'https://www.roblox.com/', deleted: false },
-                ]
-            },
-            {
-                title: '工具',
-                tiles: [
-                    { id: 'calculator', name: '计算器', size: 'normal', action: 'createWindow', url: 'https://www.desmos.com/scientific', deleted: false },
-                    { id: 'notepad', name: '记事本', size: 'normal', action: 'createWindow', url: 'https://anotepad.com/', deleted: false },
-                    { id: 'calendar', name: '日历', size: 'normal', action: 'createWindow', url: 'https://calendar.google.com/', deleted: false },
-                ]
-            }
-        ]
-    };
-
-    // --- 从 localStorage 加载数据，如果不存在则使用默认数据 ---
-    let appData = JSON.parse(localStorage.getItem('hotmelOS_appData'));
-    if (!appData) {
-        appData = defaultAppData;
-        localStorage.setItem('hotmelOS_appData', JSON.stringify(appData));
-    }
-
-
     // --- DOM 元素 ---
     const startButton = document.getElementById('start-button');
-    const startMenu = document.getElementById('start-menu');
     const timeElement = document.getElementById('time');
-    const startMenuListContainer = document.getElementById('start-menu-list-container');
-    const tilesContainer = document.getElementById('start-menu-tiles-container');
-    const contextMenu = document.getElementById('context-menu');
-    const contextMenuDelete = document.getElementById('context-menu-delete');
-    const shutdownButton = document.getElementById('shutdown-button');
+    const startMenuIframe = document.getElementById('start-menu-iframe');
     const shutdownScreen = document.getElementById('shutdown-screen');
 
     // --- 函数 ---
 
-    // 渲染整个开始菜单
-    function renderStartMenu() {
-        startMenuListContainer.innerHTML = '';
-        tilesContainer.innerHTML = '';
-
-        appData.startMenuItems.forEach(itemData => {
-            if (itemData.deleted) return;
-            const itemElement = document.createElement('div');
-            itemElement.className = 'start-menu-list-item';
-            if (itemData.type === 'header') {
-                itemElement.textContent = itemData.name;
-                itemElement.style.fontWeight = 'bold';
-            } else if (itemData.type === 'item') {
-                const span = document.createElement('span');
-                span.textContent = itemData.name;
-                itemElement.appendChild(span);
-                itemElement.addEventListener('click', () => handleAction(itemData));
-                itemElement.addEventListener('contextmenu', (e) => showContextMenu(e, itemData));
-            } else if (itemData.type === 'separator') {
-                itemElement.textContent = '#';
-            }
-            startMenuListContainer.appendChild(itemElement);
-        });
-
-        appData.tileSections.forEach(sectionData => {
-            const sectionDiv = document.createElement('div');
-            sectionDiv.className = 'tiles-section';
-            const titleDiv = document.createElement('div');
-            titleDiv.className = 'section-title';
-            titleDiv.textContent = sectionData.title;
-            sectionDiv.appendChild(titleDiv);
-            const gridDiv = document.createElement('div');
-            gridDiv.className = 'tiles-grid';
-            sectionData.tiles.forEach(tileData => {
-                if (tileData.deleted) return;
-                const tileDiv = document.createElement('div');
-                tileDiv.className = `tile ${tileData.size || 'normal'}`;
-                const span = document.createElement('span');
-                span.textContent = tileData.name;
-                tileDiv.appendChild(span);
-                tileDiv.addEventListener('click', () => handleAction(tileData));
-                if (tileData.id !== 'addapp') { // 确保“添加应用”不能被删除
-                    tileDiv.addEventListener('contextmenu', (e) => showContextMenu(e, tileData));
-                }
-                gridDiv.appendChild(tileDiv);
-            });
-            sectionDiv.appendChild(gridDiv);
-            tilesContainer.appendChild(sectionDiv);
-        });
-    }
-
-    // 显示右键菜单
-    function showContextMenu(e, itemData) {
-        e.preventDefault();
-        contextMenu.style.display = 'block';
-        contextMenu.style.left = `${e.pageX}px`;
-        contextMenu.style.top = `${e.pageY}px`;
-        contextMenuDelete.onclick = () => {
-            itemData.deleted = true;
-            localStorage.setItem('hotmelOS_appData', JSON.stringify(appData)); // 保存更改
-            renderStartMenu();
-            contextMenu.style.display = 'none';
-        };
-    }
-
-    // 处理点击事件
-    function handleAction(itemData) {
-        if (itemData.action === 'createWindow' || itemData.action === 'openWindow') {
-            createWindow(itemData.name, itemData.url);
-        } else if (itemData.action === 'alert') {
-            alert(`“${itemData.name}”不是一个真正的应用程序。`);
-        }
-        startMenu.style.display = 'none';
-    }
-
     // 切换开始菜单
+    function toggleStartMenu() {
+        const isVisible = startMenuIframe.style.display !== 'none';
+        if (isVisible) {
+            // 向iframe发送消息，关闭开始菜单
+            startMenuIframe.contentWindow.postMessage({ type: 'closeStartMenu' }, '*');
+            startMenuIframe.style.display = 'none';
+        } else {
+            // 确保iframe已加载
+            startMenuIframe.style.display = 'block';
+            // 向iframe发送消息，显示开始菜单
+            if (startMenuIframe.contentWindow) {
+                startMenuIframe.contentWindow.postMessage({ type: 'toggleStartMenu' }, '*');
+            }
+        }
+    }
+
+    // 关闭开始菜单
+    function closeStartMenu() {
+        startMenuIframe.style.display = 'none';
+        if (startMenuIframe.contentWindow) {
+            startMenuIframe.contentWindow.postMessage({ type: 'closeStartMenu' }, '*');
+        }
+    }
+
+    // 开始按钮点击事件
     startButton.addEventListener('click', (e) => {
         e.stopPropagation();
-        startMenu.style.display = startMenu.style.display === 'flex' ? 'none' : 'flex';
+        toggleStartMenu();
     });
 
     // 点击其他地方隐藏菜单
     document.addEventListener('click', (e) => {
-        if (!startMenu.contains(e.target)) startMenu.style.display = 'none';
-        if (!contextMenu.contains(e.target)) contextMenu.style.display = 'none';
+        if (!startButton.contains(e.target) && startMenuIframe.style.display !== 'none') {
+            closeStartMenu();
+        }
     });
+
     // 按下 Ctrl 键切换开始菜单
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Control') {
-            startMenu.style.display = startMenu.style.display === 'flex' ? 'none' : 'flex';
+            toggleStartMenu();
         }
     });
+
+    // 监听来自iframe的消息
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'createWindow') {
+            createWindow(event.data.title, event.data.url);
+        } else if (event.data.type === 'closeStartMenu') {
+            closeStartMenu();
+        } else if (event.data.type === 'shutdown') {
+            shutdown();
+        }
+    });
+
+    // 关机功能
+    function shutdown() {
+        shutdownScreen.style.display = 'block';
+        // 向父窗口转发关机消息，以便关闭iframe和退出全屏
+        window.parent.postMessage('shutdown', '*');
+        setTimeout(() => {
+            shutdownScreen.style.display = 'none';
+        }, 1000);
+    };
 
     // 更新时间
     function updateTime() {
@@ -235,20 +150,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 关机功能 ---
-    shutdownButton.addEventListener('click', () => {
-        // 向父窗口发送消息以关闭桌面
-        window.parent.postMessage('shutdown', '*');
-    });
-
     // --- 初始化 ---
-    renderStartMenu();
     setInterval(updateTime, 1000);
     updateTime();
 
-    // 监听 localStorage 变化，实现页面间通信
-    window.addEventListener('storage', () => {
-        appData = JSON.parse(localStorage.getItem('hotmelOS_appData')) || defaultAppData;
-        renderStartMenu();
-    });
+    // 确保iframe内容完全加载
+    startMenuIframe.onload = function() {
+        console.log('开始菜单iframe已加载');
+    };
+    
+    // 初始化时尝试向iframe发送一个消息，确认连接已建立
+    setTimeout(() => {
+        if (startMenuIframe.contentWindow) {
+            startMenuIframe.contentWindow.postMessage({ type: 'init' }, '*');
+        }
+    }, 1000);
 });
