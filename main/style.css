@@ -20,7 +20,35 @@ body, html {
     background-color: rgba(255, 255, 255, 0.80);
     display: flex;
     align-items: center;
+    justify-content: space-between;
     color: black;
+    z-index: 999;
+}
+
+/* 任务栏容器样式 */
+.taskbar-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+/* 居中模式下的任务栏容器 */
+#taskbar.center .taskbar-container {
+    justify-content: center;
+    flex-grow: 1;
+}
+
+/* 居中任务栏图标样式 */
+#taskbar.center #taskbar-icons {
+    justify-content: center;
+    flex-grow: 0;
+}
+
+/* 居中开始菜单样式 */
+#taskbar.center + #start-menu-iframe {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
 }
 
 #start-button {
@@ -39,6 +67,32 @@ body, html {
 
 #taskbar-icons {
     flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.taskbar-icon {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.taskbar-icon:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+.taskbar-icon:active {
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 #system-tray {
@@ -65,6 +119,7 @@ body, html {
     flex-direction: column;
     resize: both;
     overflow: hidden;
+    border-radius: 8px;
 }
 
 .window-header {
@@ -82,13 +137,27 @@ body, html {
     font-weight: bold;
 }
 
+.window-controls {
+    display: flex;
+    gap: 0;
+}
+
 .window-controls button {
     background: none;
     border: none;
     color: #555;
-    font-size: 16px;
     cursor: pointer;
-    padding: 0 5px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+}
+
+.window-controls button .material-icons {
+    font-size: 16px;
+    line-height: 1;
 }
 
 .window-body {
