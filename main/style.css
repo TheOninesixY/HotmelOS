@@ -4,7 +4,7 @@ body, html {
     height: 100%;
     overflow: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: url('wallpaper.jpg') no-repeat center center fixed;
+    background: url('https://images.pexels.com/photos/3109850/pexels-photo-3109850.jpeg') no-repeat center center fixed;
     background-size: cover;
 }
 

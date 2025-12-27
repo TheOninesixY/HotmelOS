@@ -84,6 +84,9 @@ document.getElementById('refreshBingWallpaper').addEventListener('click', async 
     }
 });
 
+// 恢复默认壁纸按钮
+document.getElementById('restoreDefaultWallpaper').addEventListener('click', restoreDefaultWallpaper);
+
 // 更新预览
 function updatePreview(wallpaperUrl) {
     const previewImage = document.getElementById('previewImage');
@@ -98,6 +101,30 @@ function applyWallpaper(wallpaperUrl) {
         type: 'setWallpaper',
         url: wallpaperUrl
     }, '*');
+    
+    // 保存到本地存储
+    localStorage.setItem('hotmelos_wallpaper', wallpaperUrl);
+}
+
+// 恢复默认壁纸
+function restoreDefaultWallpaper() {
+    // 取消所有壁纸项的选择
+    document.querySelectorAll('.wallpaper-item').forEach(i => i.classList.remove('selected'));
+    
+    // 清除当前选中的壁纸
+    selectedWallpaper = '';
+    
+    // 清除本地存储中的壁纸设置
+    localStorage.removeItem('hotmelos_wallpaper');
+    
+    // 向父窗口发送消息，移除背景图片样式，恢复CSS默认背景
+    window.parent.postMessage({
+        type: 'clearWallpaper'
+    }, '*');
+    
+    // 更新预览为空或显示默认壁纸
+    document.getElementById('previewImage').src = '';
+    document.getElementById('previewImage').style.display = 'none';
 }
 
 // 初始化：加载上次保存的壁纸和必应壁纸

@@ -8,7 +8,7 @@ body, html {
 
 /* Lockscreen specific styles */
 #lockscreen {
-    background: url('main/wallpaper.jpg') no-repeat center center fixed;
+    background: url('https://images.pexels.com/photos/3109850/pexels-photo-3109850.jpeg') no-repeat center center fixed;
     background-size: cover;
     height: 100vh;
     width: 100vw;

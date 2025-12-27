@@ -100,6 +100,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.backgroundImage = `url('${event.data.url}')`;
             // 保存到localStorage
             localStorage.setItem('hotmelos_wallpaper', event.data.url);
+        } else if (event.data.type === 'clearWallpaper') {
+            // 清除桌面壁纸，恢复CSS默认背景
+            document.body.style.backgroundImage = '';
+            // 清除localStorage中的壁纸设置
+            localStorage.removeItem('hotmelos_wallpaper');
         } else if (event.data.type === 'setTaskbarCenter') {
             // 设置任务栏居中
             toggleTaskbarCenter(event.data.center);
@@ -114,6 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedWallpaper = localStorage.getItem('hotmelos_wallpaper');
         if (savedWallpaper) {
             document.body.style.backgroundImage = `url('${savedWallpaper}')`;
+        } else {
+            // 没有保存的壁纸时，确保移除背景图片样式，使用CSS默认背景
+            document.body.style.backgroundImage = '';
         }
     }
 
