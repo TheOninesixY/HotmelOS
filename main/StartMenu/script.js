@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     { id: 'qq', name: 'QQ', size: 'normal', action: 'alert', deleted: false },
                     { id: 'terminal', name: '终端', size: 'normal', action: 'createWindow', url: './Apps/Terminal/index.html', deleted: false },
                     { id: 'pp', type: 'item',name: 'Photopea', action: 'createWindow', url: 'https://www.photopea.com/'},
+                    { id: 'code', name: 'Hotmel Code', size: 'normal', action: 'createWindow', url: './Apps/Hotmel Code/index.html', deleted: false },
                     { id: 'addapp', name: 'App Store', size: 'normal', action: 'createWindow', url: './Apps/App Store/index.html', deleted: false },
                     { id: 'browser', name: '浏览器', size: 'normal', action: 'createWindow', url: './Apps/Browser/index.html', deleted: false },
                     { id: 'settings', name: '设置', size: 'normal', action: 'createWindow', url: './Apps/Setting/index.html', deleted: false },
