@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tiles: [
                     { id: 'wechat', name: '微信', size: 'normal', action: 'createWindow', url: 'https://web.weixin.qq.com/', deleted: false },
                     { id: 'qq', name: 'QQ', size: 'normal', action: 'alert', deleted: false },
-                    { id: 'terminal', name: '终端', size: 'normal', action: 'createWindow', url: 'https://hackertyper.net/', deleted: false },
+                    { id: 'terminal', name: '终端', size: 'normal', action: 'createWindow', url: './Apps/Terminal/index.html', deleted: false },
                     { id: 'pp', type: 'item',name: 'Photopea', action: 'createWindow', url: 'https://www.photopea.com/'},
                     { id: 'addapp', name: 'App Store', size: 'normal', action: 'createWindow', url: './Apps/App Store/index.html', deleted: false },
                     { id: 'browser', name: '浏览器', size: 'normal', action: 'createWindow', url: './Apps/Browser/index.html', deleted: false },
