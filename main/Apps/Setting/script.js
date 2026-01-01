@@ -155,6 +155,27 @@ async function init() {
             }, '*');
         });
     }
+    
+    // 加载上次保存的布局设置
+    const savedLayout = localStorage.getItem('hotmelos_layout') || 'windows';
+    const layoutRadios = document.querySelectorAll('input[name="layout"]');
+    layoutRadios.forEach(radio => {
+        if (radio.value === savedLayout) {
+            radio.checked = true;
+        }
+        
+        // 添加事件监听器
+        radio.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                const selectedLayout = e.target.value;
+                // 向父窗口发送消息，设置布局
+                window.parent.postMessage({
+                    type: 'setLayout',
+                    layout: selectedLayout
+                }, '*');
+            }
+        });
+    });
 }
 
 // 页面加载完成后初始化

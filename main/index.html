@@ -8,12 +8,32 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
+    <!-- macOS风格的顶部Dash -->
+    <div id="dash">
+        <div id="dash-left">
+            <div id="dash-start-button"></div>
+        </div>
+        <div id="dash-center"></div>
+        <div id="system-tray">
+            <span id="dash-time"></span>
+        </div>
+    </div>
+    
     <div id="desktop">
         <!-- 桌面图标将在这里 -->
     </div>
+    
+    <!-- macOS风格的底部Dock -->
+    <div id="dock">
+        <div id="dock-icons">
+            <!-- Dock图标将在这里 -->
+        </div>
+    </div>
+    
+    <!-- Windows风格的任务栏 -->
     <div id="taskbar">
+        <div id="start-button"></div>
         <div class="taskbar-container">
-            <div id="start-button"></div>
             <div id="taskbar-icons">
                 <!-- 任务栏图标将在这里 -->
             </div>
@@ -22,6 +42,7 @@
             <span id="time"></span>
         </div>
     </div>
+    
     <!-- 开始菜单 iframe -->
     <iframe id="start-menu-iframe" src="StartMenu/index.html" style="position: absolute; border: none; width: 600px; height: 500px; bottom: 50px; left: 10px; z-index: 100; transform: translateY(100%); opacity: 0; transition: transform 0.3s ease, opacity 0.3s ease; display: block;"></iframe>
 

@@ -328,6 +328,73 @@ button:focus {
     transform: scale(1.1);
 }
 
+/* 布局选项样式 */
+.layout-options {
+    margin-top: 20px;
+}
+
+.layout-option {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    background-color: var(--background-primary);
+    border-radius: var(--radius-md);
+    border: 2px solid transparent;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.layout-option::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: var(--primary-color);
+    transform: translateX(-100%);
+    transition: transform var(--transition-fast);
+}
+
+.layout-option:hover {
+    background-color: var(--background-secondary);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-light);
+}
+
+.layout-option:hover::before {
+    transform: translateX(0);
+}
+
+.layout-option label {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    flex: 1;
+    transition: color var(--transition-fast);
+    margin-left: 12px;
+}
+
+.layout-option:hover label {
+    color: var(--primary-color);
+}
+
+.layout-option input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+    transition: transform var(--transition-fast);
+}
+
+.layout-option input[type="radio"]:hover {
+    transform: scale(1.1);
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
     body {

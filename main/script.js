@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- DOM 元素 ---
-    const startButton = document.getElementById('start-button');
-    const timeElement = document.getElementById('time');
+    const startButton = document.getElementById('start-button'); // Windows任务栏开始按钮
+    const dashStartButton = document.getElementById('dash-start-button'); // macOS Dash开始按钮
+    const timeElement = document.getElementById('time'); // Windows任务栏时间
+    const dashTimeElement = document.getElementById('dash-time'); // macOS Dash时间
     const startMenuIframe = document.getElementById('start-menu-iframe');
     const shutdownScreen = document.getElementById('shutdown-screen');
 
@@ -20,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 向iframe发送消息，显示开始菜单
             if (startMenuIframe.contentWindow) {
                 const taskbar = document.getElementById('taskbar');
-                const isCenterMode = taskbar.classList.contains('center');
+                const isCenterMode = taskbar && taskbar.classList.contains('center');
                 startMenuIframe.contentWindow.postMessage({ 
                     type: 'toggleStartMenu',
                     isCenterMode: isCenterMode
@@ -45,12 +47,18 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
         toggleStartMenu();
     });
+    
+    // macOS Dash开始按钮点击事件
+    dashStartButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleStartMenu();
+    });
 
     // 点击其他地方隐藏菜单
     document.addEventListener('click', (e) => {
         // 检查是否已经显示（通过transform判断）
         const isVisible = startMenuIframe.style.transform === 'translateY(0%)' || startMenuIframe.style.transform === '';
-        if (!startButton.contains(e.target) && isVisible) {
+        if (!startButton.contains(e.target) && !dashStartButton.contains(e.target) && isVisible) {
             closeStartMenu();
         }
     });
@@ -65,13 +73,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // 切换任务栏居中状态
     function toggleTaskbarCenter(center) {
         const taskbar = document.getElementById('taskbar');
-        if (center) {
-            taskbar.classList.add('center');
-        } else {
-            taskbar.classList.remove('center');
+        if (taskbar) {
+            if (center) {
+                taskbar.classList.add('center');
+            } else {
+                taskbar.classList.remove('center');
+            }
+            // 保存到localStorage
+            localStorage.setItem('hotmelos_taskbar_center', center ? 'true' : 'false');
         }
+    }
+
+    // 切换布局样式
+    function setLayout(layout) {
+        const body = document.body;
+        body.classList.remove('layout-windows', 'layout-macos');
+        body.classList.add(`layout-${layout}`);
+        
         // 保存到localStorage
-        localStorage.setItem('hotmelos_taskbar_center', center ? 'true' : 'false');
+        localStorage.setItem('hotmelos_layout', layout);
+        
+        // 移除所有现有任务栏/Dock图标
+        windows.forEach(windowInfo => {
+            if (windowInfo.taskbarIcon) {
+                windowInfo.taskbarIcon.remove();
+                windowInfo.taskbarIcon = null;
+            }
+        });
+        
+        // 为所有窗口重新创建任务栏/Dock图标
+        windows.forEach(windowInfo => {
+            createTaskbarIcon(windowInfo);
+        });
+        
+        // 更新所有最大化窗口的尺寸
+        windows.forEach(windowInfo => {
+            if (windowInfo.isMaximized) {
+                maximizeWindow(windowInfo.id, true);
+            }
+        });
     }
 
     // 切换全屏状态
@@ -111,6 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (event.data.type === 'toggleFullscreen') {
             // 切换全屏状态
             toggleFullscreen();
+        } else if (event.data.type === 'setLayout') {
+            // 切换布局样式
+            setLayout(event.data.layout);
         }
     });
     
@@ -140,7 +183,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = new Date();
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
-        timeElement.textContent = `${hours}:${minutes}`;
+        const timeString = `${hours}:${minutes}`;
+        
+        // 更新两个时间元素
+        if (timeElement) {
+            timeElement.textContent = timeString;
+        }
+        if (dashTimeElement) {
+            dashTimeElement.textContent = timeString;
+        }
     }
 
     // 窗口数据管理
@@ -185,16 +236,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 windowDiv.style.left = originalState.left;
                 windowDiv.style.width = originalState.width;
                 windowDiv.style.height = originalState.height;
+                windowDiv.classList.remove('maximized');
                 isMaximized = false;
                 maximizeIcon.textContent = 'fullscreen';
             } else {
-                originalState = { top: windowDiv.style.top, left: windowDiv.style.left, width: windowDiv.style.width, height: windowDiv.style.height };
-                windowDiv.style.top = '0';
-                windowDiv.style.left = '0';
-                windowDiv.style.width = '100%';
-                windowDiv.style.height = 'calc(100% - 40px)';
-                isMaximized = true;
-                maximizeIcon.textContent = 'fullscreen_exit';
+                maximizeWindow(windowId);
             }
         };
         
@@ -250,11 +296,13 @@ document.addEventListener('DOMContentLoaded', () => {
             title: title,
             element: windowDiv,
             isMinimized: false,
-            taskbarIcon: null
+            isMaximized: false,
+            taskbarIcon: null,
+            originalState: originalState
         };
         windows.push(windowInfo);
         
-        // 创建任务栏图标
+        // 创建任务栏/Dock图标
         createTaskbarIcon(windowInfo);
     }
     
@@ -264,6 +312,46 @@ document.addEventListener('DOMContentLoaded', () => {
         if (windowInfo) {
             windowInfo.element.style.display = 'none';
             windowInfo.isMinimized = true;
+        }
+    }
+    
+    // 最大化窗口
+    function maximizeWindow(windowId, forceMaximize = false) {
+        const windowInfo = windows.find(w => w.id === windowId);
+        if (!windowInfo) return;
+        
+        if (!forceMaximize && windowInfo.isMaximized) {
+            // 恢复原始状态
+            windowInfo.element.style.top = windowInfo.originalState.top;
+            windowInfo.element.style.left = windowInfo.originalState.left;
+            windowInfo.element.style.width = windowInfo.originalState.width;
+            windowInfo.element.style.height = windowInfo.originalState.height;
+            windowInfo.element.classList.remove('maximized');
+            windowInfo.isMaximized = false;
+            const maximizeIcon = windowInfo.element.querySelector('.material-icons');
+            if (maximizeIcon) {
+                maximizeIcon.textContent = 'fullscreen';
+            }
+        } else {
+            // 保存原始状态
+            windowInfo.originalState = {
+                top: windowInfo.element.style.top,
+                left: windowInfo.element.style.left,
+                width: windowInfo.element.style.width,
+                height: windowInfo.element.style.height
+            };
+            
+            // 最大化窗口
+            windowInfo.element.style.top = '0';
+            windowInfo.element.style.left = '0';
+            windowInfo.element.style.width = '100%';
+            windowInfo.element.style.height = 'calc(100% - 40px)';
+            windowInfo.element.classList.add('maximized');
+            windowInfo.isMaximized = true;
+            const maximizeIcon = windowInfo.element.querySelector('.material-icons');
+            if (maximizeIcon) {
+                maximizeIcon.textContent = 'fullscreen_exit';
+            }
         }
     }
     
@@ -287,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const windowInfo = windows[windowIndex];
             // 移除窗口元素
             windowInfo.element.remove();
-            // 移除任务栏图标
+            // 移除任务栏/Dock图标
             if (windowInfo.taskbarIcon) {
                 windowInfo.taskbarIcon.remove();
             }
@@ -296,11 +384,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // 创建任务栏图标
+    // 创建任务栏/Dock图标
     function createTaskbarIcon(windowInfo) {
-        const taskbarIcons = document.getElementById('taskbar-icons');
+        // 根据当前布局选择图标容器
+        const currentLayout = localStorage.getItem('hotmelos_layout') || 'windows';
+        const iconContainer = currentLayout === 'macos' ? 
+            document.getElementById('dock-icons') : 
+            document.getElementById('taskbar-icons');
+        
+        if (!iconContainer) return;
+        
         const icon = document.createElement('div');
-        icon.className = 'taskbar-icon';
+        icon.className = currentLayout === 'macos' ? 'dock-icon' : 'taskbar-icon';
         
         // 根据应用名称生成图标
         const iconDiv = document.createElement('div');
@@ -333,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 minimizeWindow(windowInfo.id);
             }
         };
-        taskbarIcons.appendChild(icon);
+        iconContainer.appendChild(icon);
         windowInfo.taskbarIcon = icon;
     }
 
@@ -344,11 +439,18 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleTaskbarCenter(center);
     }
 
+    // 初始化布局设置
+    function initLayout() {
+        const savedLayout = localStorage.getItem('hotmelos_layout') || 'windows';
+        setLayout(savedLayout);
+    }
+
     // --- 初始化 ---
     setInterval(updateTime, 1000);
     updateTime();
     initWallpaper();
     initTaskbarCenter();
+    initLayout();
 
     // 确保iframe内容完全加载
     startMenuIframe.onload = function() {

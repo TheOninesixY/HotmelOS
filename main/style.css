@@ -8,21 +8,86 @@ body, html {
     background-size: cover;
 }
 
-#desktop {
-    height: calc(100% - 40px);
+/* Windows布局 - 传统底部任务栏 */
+body.layout-windows {
+    #desktop {
+        height: calc(100% - 40px);
+    }
+    
+    #taskbar {
+        display: flex;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.80);
+        align-items: center;
+        justify-content: space-between;
+        color: black;
+        z-index: 999;
+    }
+    
+    #dash,
+    #dock {
+        display: none;
+    }
 }
 
-#taskbar {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 40px;
-    background-color: rgba(255, 255, 255, 0.80);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: black;
-    z-index: 999;
+/* macOS布局 - 上Dash下Dock */
+body.layout-macos {
+    #desktop {
+        height: calc(100% - 80px); /* 40px for dash + 40px for dock */
+        margin-top: 40px;
+        margin-bottom: 40px;
+    }
+    
+    #taskbar {
+        display: none;
+    }
+    
+    #dash {
+        display: flex;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 40px;
+        background-color: rgba(0, 0, 0, 0.3);
+        align-items: center;
+        justify-content: space-between;
+        color: white;
+        z-index: 999;
+    }
+    
+    #dash-left {
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+    }
+    
+    #dash-center {
+        flex-grow: 1;
+    }
+    
+    #dock {
+        display: flex;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 40px;
+        background-color: rgba(0, 0, 0, 0.3);
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+    }
+    
+    #dock-icons {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0 10px;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
 }
 
 /* 任务栏容器样式 */
@@ -54,7 +119,7 @@ body, html {
 #start-button {
     width: 40px;
     height: 40px;
-    background-image: url('favicon.ico'); /* A simple windows icon */
+    background-image: url('favicon.ico');
     background-size: 20px;
     background-repeat: no-repeat;
     background-position: center;
@@ -62,6 +127,20 @@ body, html {
 }
 
 #start-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+#dash-start-button {
+    width: 40px;
+    height: 40px;
+    background-image: url('favicon.ico');
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+
+#dash-start-button:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -75,6 +154,7 @@ body, html {
     overflow-y: hidden;
 }
 
+.dock-icon,
 .taskbar-icon {
     width: 40px;
     height: 40px;
@@ -87,10 +167,12 @@ body, html {
     transition: background-color 0.2s;
 }
 
+.dock-icon:hover,
 .taskbar-icon:hover {
     background-color: rgba(255, 255, 255, 0.6);
 }
 
+.dock-icon:active,
 .taskbar-icon:active {
     background-color: rgba(255, 255, 255, 0.8);
 }
@@ -120,6 +202,22 @@ body, html {
     resize: both;
     overflow: hidden;
     border-radius: 8px;
+}
+
+/* Windows布局下的窗口最大化 */
+body.layout-windows .window.maximized {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 40px);
+}
+
+/* macOS布局下的窗口最大化 */
+body.layout-macos .window.maximized {
+    top: 40px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 80px);
 }
 
 .window-header {
