@@ -168,8 +168,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // 播放音效函数
+    function playSound(src) {
+        const audio = new Audio(src);
+        audio.play().catch(err => {
+            console.error('无法播放音效:', err);
+        });
+    }
+    
     // 关机功能
     function shutdown() {
+        // 播放关机音效
+        playSound('Sounds/logout.oga');
+        
         shutdownScreen.style.display = 'block';
         // 向父窗口转发关机消息，以便关闭iframe和退出全屏
         window.parent.postMessage('shutdown', '*');

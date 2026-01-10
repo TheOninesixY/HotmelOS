@@ -1,6 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
     const timeElement = document.getElementById('lockscreen-time');
     const loginButton = document.getElementById('login-button');
+    
+    // 播放音效函数
+    function playSound(src) {
+        const audio = new Audio(src);
+        audio.play().catch(err => {
+            console.error('无法播放音效:', err);
+        });
+    }
+    
+    // 播放开机音效
+    playSound('main/Sounds/startup.mp3');
 
     function updateTime() {
         const now = new Date();
@@ -10,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loginButton.addEventListener('click', () => {
+        // 播放登录音效
+        playSound('main/Sounds/login.oga');
+        
         const elem = document.documentElement;
         const lockscreen = document.getElementById('lockscreen');
         const desktopContainer = document.getElementById('desktop-container');
